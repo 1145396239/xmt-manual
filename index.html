@@ -1,0 +1,1255 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no" />
+<meta name="theme-color" content="#120B06" />
+<meta name="format-detection" content="telephone=no" />
+<title>营销共建 · 新媒体全案服务手册</title>
+<meta name="description" content="抖音、视频号、小红书、私域社群 —— 4 大平台、58 项服务细项的一体化新媒体经营方案。" />
+<meta property="og:title" content="营销共建 · 新媒体全案" />
+<meta property="og:description" content="4 大平台 · 58 项服务细项 · H5 电子画册" />
+<meta property="og:type" content="article" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23FF6A1B'/%3E%3Cpath d='M20 44V22l12 9 12-9v22' fill='none' stroke='%23FFF3E8' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<style>
+/* ============ tokens ============ */
+:root{
+  --o:#FF6A1B; --o2:#FF8F3C; --o3:#FFC173; --o4:#FFE0BE;
+  --deep:#E2480B; --ink:#22160F; --ink2:#4E3A2D; --muted:#8C7365;
+  --cream:#FFF8F2; --paper:#FFFDFB; --line:rgba(226,72,11,.13);
+  --shadow:0 12px 28px -14px rgba(178,66,16,.30), 0 2px 8px rgba(140,60,20,.05);
+  --r:18px;
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0A0604}
+body{
+  font:400 15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  color:var(--ink);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  text-rendering:optimizeLegibility;
+}
+h1,h2,h3,h4,p,ul,figure,blockquote{margin:0}
+ul{padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+.ic{width:1em;height:1em;display:block;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* ============ stage / frame ============ */
+.stage{
+  position:fixed;inset:0;display:grid;place-items:center;
+  background:
+    radial-gradient(90% 60% at 50% -10%,#3A1C0A 0%,#160D07 45%,#0A0604 100%);
+}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(60% 40% at 50% 110%,rgba(255,106,27,.16),transparent 70%);
+}
+.book{
+  position:relative;width:100%;max-width:460px;height:100dvh;max-height:100dvh;
+  overflow:hidden;background:var(--cream);isolation:isolate;
+  box-shadow:0 40px 90px -30px rgba(0,0,0,.85);
+}
+@media (min-width:520px){
+  .book{height:min(92dvh,940px);max-height:940px;border-radius:28px;box-shadow:0 50px 110px -40px rgba(0,0,0,.9),0 0 0 1px rgba(255,150,80,.14)}
+}
+@media (min-width:520px) and (max-height:700px){ .book{height:100dvh;border-radius:0} }
+
+.track{
+  position:absolute;inset:0;display:flex;width:100%;
+  transform:translate3d(0,0,0);
+  transition:transform .62s cubic-bezier(.22,.66,.24,1);
+  will-change:transform;
+}
+.page{position:relative;flex:0 0 100%;width:100%;height:100%;overflow:hidden}
+
+/* ============ progress ============ */
+.progress{position:absolute;top:0;left:0;right:0;height:3px;z-index:50;background:rgba(120,60,20,.10)}
+.progress__fill{
+  height:100%;width:0;border-radius:0 3px 3px 0;
+  background:linear-gradient(90deg,var(--o3),var(--o2) 45%,var(--o));
+  box-shadow:0 0 12px rgba(255,120,40,.7);
+  transition:width .6s cubic-bezier(.22,.66,.24,1);
+}
+
+/* ============ reveal ============ */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .6s cubic-bezier(.2,.7,.3,1);transition-delay:var(--d,0s)}
+.page.is-active .rv{opacity:1;transform:none}
+
+/* ============ HUD ============ */
+.hud{
+  position:absolute;z-index:45;left:0;right:0;margin:0 auto;width:max-content;max-width:calc(100% - 28px);
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  display:flex;align-items:center;gap:6px;padding:6px;
+  border-radius:999px;
+  background:rgba(26,15,9,.78);
+  border:1px solid rgba(255,160,90,.18);
+  box-shadow:0 14px 34px -12px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);
+  transition:opacity .4s ease,transform .4s ease;
+}
+.hud__btn{
+  display:flex;align-items:center;gap:5px;height:34px;padding:0 12px;border-radius:999px;white-space:nowrap;
+  color:#FFD9BC;font-size:12px;letter-spacing:.04em;transition:background .2s,color .2s;
+}
+.hud__btn:hover{background:rgba(255,120,50,.16);color:#fff}
+.hud__sep{width:1px;height:18px;background:rgba(255,180,130,.22)}
+.hud__nav{display:flex;align-items:center;gap:2px}
+.hud__arrow{
+  width:34px;height:34px;display:grid;place-items:center;border-radius:50%;
+  color:#FFD9BC;transition:background .2s,color .2s,transform .15s;
+}
+.hud__arrow:active{transform:scale(.9)}
+.hud__arrow:hover{background:rgba(255,120,50,.16);color:#fff}
+.hud__arrow[disabled]{opacity:.28;pointer-events:none}
+.hud__count{
+  min-width:66px;text-align:center;color:#F3C7A6;font-size:11.5px;letter-spacing:.08em;
+  font-variant-numeric:tabular-nums;
+}
+.hud__count b{color:#fff;font-weight:700;font-size:13px;margin-right:1px}
+.hud__count i{font-style:normal;opacity:.45;margin:0 2px}
+
+/* ============ cover ============ */
+.page--cover,.page--chapter{background:#140C07}
+.cover{
+  position:relative;height:100%;overflow:hidden;
+  background:
+    radial-gradient(120% 80% at 85% 8%,rgba(255,106,27,.30) 0%,transparent 55%),
+    radial-gradient(100% 70% at 0% 95%,rgba(255,150,60,.20) 0%,transparent 60%),
+    linear-gradient(165deg,#1E120A 0%,#150C07 45%,#0D0704 100%);
+  color:#FFF3E8;display:flex;flex-direction:column;
+  padding:calc(env(safe-area-inset-top) + 30px) 26px calc(env(safe-area-inset-bottom) + 100px);
+}
+.cover::before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:var(--noise);mix-blend-mode:overlay;
+}
+.cover__ring{position:absolute;top:-14%;right:-32%;width:118%;aspect-ratio:1;opacity:.5;
+  stroke:rgba(255,150,70,.35);fill:none;stroke-width:.8}
+.cover__ring circle:nth-child(2){stroke-dasharray:2 7;opacity:.7}
+.cover__glow{
+  position:absolute;width:64%;aspect-ratio:1;right:-18%;top:6%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,120,30,.55),rgba(255,90,20,.05) 62%,transparent 70%);
+  filter:blur(18px);animation:breathe 9s ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.08);opacity:1}}
+
+.cover__top{display:flex;align-items:center;gap:10px;font-size:10.5px;letter-spacing:.26em;color:rgba(255,214,180,.62);position:relative}
+.cover__top span.yr{color:var(--o3);font-weight:700;letter-spacing:.12em;font-size:12px}
+.cover__sep{width:26px;height:1px;background:linear-gradient(90deg,rgba(255,160,90,.7),transparent)}
+
+.cover__body{margin-top:auto;margin-bottom:auto;padding-top:26px;position:relative}
+.cover__badge{
+  display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 10px;border-radius:999px;
+  font-size:11px;letter-spacing:.14em;color:#FFDCC2;
+  background:rgba(255,120,40,.13);border:1px solid rgba(255,150,80,.32);
+}
+.cover__badge i{width:5px;height:5px;border-radius:50%;background:var(--o2);box-shadow:0 0 8px var(--o2)}
+.cover__title{
+  margin-top:20px;font-size:clamp(38px,11.6vw,50px);line-height:1.08;font-weight:900;
+  letter-spacing:-.03em;display:flex;flex-direction:column;
+}
+.cover__title span:first-child{color:#FFEFE2}
+.cover__title--hl{
+  background:linear-gradient(100deg,#FFD08A 0%,#FF8A34 42%,#FF5A0E 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  position:relative;
+}
+.cover__platforms{margin-top:18px;font-size:12.5px;letter-spacing:.16em;color:rgba(255,214,180,.85)}
+.cover__platforms b{color:var(--o);font-weight:400;margin:0 3px}
+.cover__desc{margin-top:14px;font-size:12.5px;line-height:1.85;color:rgba(255,225,205,.55)}
+.cover__desc span{display:block}
+
+.cover__foot{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.cover__meta{display:flex;gap:20px}
+.cover__meta div{display:flex;flex-direction:column;gap:3px}
+.cover__meta b{font-size:19px;font-weight:800;color:#FFD3AE;letter-spacing:-.01em}
+.cover__meta span{font-size:10px;color:rgba(255,200,165,.45);letter-spacing:.1em}
+.cover__hint{
+  display:flex;align-items:center;gap:6px;font-size:10.5px;letter-spacing:.16em;
+  color:rgba(255,190,150,.6);animation:nudge 2.6s ease-in-out infinite;
+}
+.cover__hint .ic{width:14px;height:14px}
+@keyframes nudge{0%,100%{transform:translateX(0);opacity:.65}50%{transform:translateX(5px);opacity:1}}
+
+/* ============ content page ============ */
+.page--content{background:linear-gradient(180deg,#FFF9F4 0%,#FFF4EB 55%,#FFEFE3 100%)}
+.page--content::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(70% 40% at 100% 0%,rgba(255,140,60,.15),transparent 62%);
+}
+.scroll{
+  position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  padding:calc(env(safe-area-inset-top) + 28px) 20px calc(env(safe-area-inset-bottom) + 112px);
+}
+.scroll::-webkit-scrollbar{width:0;height:0}
+.phead{position:relative;padding-bottom:16px}
+.kicker{
+  display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:700;
+  letter-spacing:.2em;color:var(--deep);text-transform:uppercase;
+}
+.kicker::before{content:"";width:16px;height:2px;border-radius:2px;background:var(--o)}
+.phead h2{
+  margin-top:9px;font-size:27px;line-height:1.24;font-weight:900;letter-spacing:-.02em;color:var(--ink);
+}
+.phead .lead{margin-top:8px;font-size:12.5px;line-height:1.7;color:var(--muted);max-width:22em}
+
+/* stats */
+.statrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0 4px}
+.stat{
+  padding:11px 10px 10px;border-radius:14px;background:rgba(255,255,255,.72);
+  border:1px solid var(--line);box-shadow:0 6px 16px -12px rgba(180,80,20,.5);
+}
+.stat b{display:block;font-size:20px;line-height:1;font-weight:900;color:var(--deep);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat b small{font-size:10px;font-weight:700;margin-left:2px;letter-spacing:0}
+.stat span{display:block;margin-top:5px;font-size:10px;line-height:1.35;color:var(--muted);letter-spacing:.02em}
+
+/* platform tiles */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+.ptile{
+  position:relative;text-align:left;padding:12px 13px 12px;border-radius:16px;overflow:hidden;
+  background:var(--paper);border:1px solid rgba(226,72,11,.1);box-shadow:var(--shadow);
+  transition:transform .18s ease;
+}
+.ptile:active{transform:scale(.975)}
+.ptile::before{
+  content:"";position:absolute;right:-24%;top:-34%;width:74%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,140,60,.24),transparent 68%);
+}
+.ptile__ic{
+  position:relative;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;
+  font-size:15px;color:var(--deep);margin-bottom:10px;
+  background:linear-gradient(150deg,#FFEAD7,#FFD2A8);box-shadow:inset 0 1px 0 #fff;
+}
+.ptile__ic .ic{width:16px;height:16px}
+.ptile__name{position:relative;display:block;font-size:15px;font-weight:900;color:var(--ink);letter-spacing:-.01em}
+.ptile__tag{position:relative;display:block;margin-top:3px;font-size:10px;color:var(--muted)}
+.ptile__n{position:absolute;right:12px;top:15px;font-size:9px;color:#B78F76}
+.ptile__n b{font-size:13px;font-weight:900;color:var(--deep);margin-right:1px}
+
+/* flow */
+.flow{margin-top:16px}
+.flow__t{display:flex;align-items:center;gap:10px;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--deep)}
+.flow__t i{flex:1;height:1px;background:linear-gradient(90deg,rgba(226,72,11,.32),transparent)}
+.steps{display:flex;gap:6px;margin-top:11px}
+.step{
+  flex:1;padding:9px 8px 10px;border-radius:12px;position:relative;
+  background:rgba(255,255,255,.7);border:1px solid rgba(226,72,11,.1);
+}
+.step b{display:block;font-size:9.5px;font-weight:800;color:var(--o);letter-spacing:.08em}
+.step span{display:block;margin-top:5px;font-size:11px;font-weight:700;color:var(--ink2);line-height:1.3}
+
+/* distribution */
+.dist{margin-top:16px}
+.dist__head{display:flex;align-items:baseline;justify-content:space-between;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--deep)}
+.dist__head span:last-child{letter-spacing:.04em;color:#B78F76;font-weight:400;font-size:10px}
+.dist__bar{display:flex;height:9px;border-radius:6px;overflow:hidden;margin-top:11px;background:rgba(226,72,11,.07);gap:2px}
+.dist__bar i{display:block;height:100%;width:var(--w);background:var(--c);border-radius:2px}
+.dist__legend{display:flex;flex-wrap:wrap;gap:8px 15px;margin-top:9px}
+.dist__legend li{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)}
+.dist__legend em{width:6px;height:6px;border-radius:2px;background:var(--c);font-style:normal}
+.dist__legend b{color:var(--ink2);font-weight:800;font-size:10.5px}
+
+/* next card */
+.page--intro .scroll{display:flex;flex-direction:column}
+.nextcard{
+  margin-top:auto;display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+  padding:11px 15px;border-radius:15px;
+  background:linear-gradient(100deg,rgba(255,255,255,.94),rgba(255,244,235,.7));
+  border:1px solid rgba(226,72,11,.16);box-shadow:0 10px 22px -18px rgba(180,80,20,.8);
+}
+.nextcard__k{flex:0 0 auto;font-size:9px;letter-spacing:.18em;font-weight:700;color:var(--o)}
+.nextcard__t{flex:1;font-size:12.5px;font-weight:800;color:var(--ink)}
+.nextcard__a{color:var(--deep);font-size:14px;line-height:1}
+
+/* group */
+.group{margin-top:20px}
+.group__head{display:flex;align-items:baseline;gap:8px;margin-bottom:9px}
+.group__head h3{font-size:13px;font-weight:800;letter-spacing:.02em;color:var(--ink2)}
+.group__idx{font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--o);opacity:.75}
+.group__n{
+  margin-left:auto;font-size:9.5px;color:var(--deep);letter-spacing:.04em;
+  padding:2px 7px;border-radius:999px;background:rgba(255,110,40,.10);
+}
+
+/* list item */
+.list{display:flex;flex-direction:column;gap:8px}
+.item{
+  display:flex;gap:11px;padding:12px 13px 12px 12px;border-radius:var(--r);
+  background:var(--paper);border:1px solid rgba(226,72,11,.09);
+  box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.item::after{
+  content:"";position:absolute;left:0;top:14px;bottom:14px;width:2.5px;border-radius:0 3px 3px 0;
+  background:linear-gradient(180deg,var(--o3),var(--o));opacity:.65;
+}
+.item__no{
+  flex:0 0 22px;height:22px;border-radius:8px;display:grid;place-items:center;
+  font-size:10px;font-weight:800;color:var(--deep);
+  background:linear-gradient(150deg,#FFE9D4,#FFD2AE);
+  font-variant-numeric:tabular-nums;
+}
+.item__body{min-width:0;flex:1}
+.item__body h4{font-size:13.5px;font-weight:800;line-height:1.4;color:var(--ink);letter-spacing:-.01em}
+.item__body p{
+  margin-top:4px;font-size:11.5px;line-height:1.65;color:#7A6152;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+}
+
+/* pills */
+.pills{display:flex;flex-wrap:wrap;gap:7px}
+.pill{
+  padding:8px 11px;border-radius:12px;background:var(--paper);border:1px solid rgba(226,72,11,.1);
+  box-shadow:0 6px 14px -12px rgba(180,80,20,.6);min-width:calc(50% - 4px);flex:1 1 calc(50% - 4px);
+}
+.pill b{display:block;font-size:12px;font-weight:800;color:var(--ink)}
+.pill span{display:block;margin-top:2px;font-size:10.5px;color:var(--muted);line-height:1.5}
+
+/* hero card */
+.hero{
+  margin-top:14px;padding:16px 16px 15px;border-radius:20px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#2A1409 0%,#4A1F0A 55%,#7A320C 100%);
+  color:#FFF1E4;box-shadow:0 18px 34px -20px rgba(120,50,10,.9);
+}
+.hero::before{
+  content:"";position:absolute;right:-28%;top:-55%;width:76%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,140,50,.55),transparent 68%);filter:blur(6px);
+}
+.hero__tag{position:relative;font-size:9.5px;letter-spacing:.2em;color:#FFB98A;text-transform:uppercase}
+.hero__main{position:relative;display:flex;align-items:flex-end;gap:9px;margin-top:7px}
+.hero__main b{font-size:34px;line-height:1;font-weight:900;color:#FFCE9E;letter-spacing:-.03em}
+.hero__main span{font-size:11px;line-height:1.4;color:rgba(255,215,185,.75);padding-bottom:3px}
+.hero p{position:relative;margin-top:9px;font-size:11.5px;line-height:1.7;color:rgba(255,220,195,.62)}
+
+/* quote */
+.quote{
+  margin-top:18px;padding:15px 16px 16px;border-radius:16px;position:relative;overflow:hidden;
+  background:rgba(255,255,255,.62);border:1px dashed rgba(226,72,11,.25);
+}
+.quote__mark{position:absolute;right:12px;top:2px;font-size:46px;line-height:1;color:rgba(255,168,110,.34);font-family:Georgia,serif}
+.quote__tag{display:inline-block;font-size:9px;letter-spacing:.22em;font-weight:700;color:var(--o);margin-bottom:8px}
+.quote blockquote{font-size:12.5px;line-height:1.85;color:#5F4A3C;font-weight:500;max-width:92%}
+
+/* note */
+.note{
+  margin-top:14px;display:flex;gap:9px;padding:12px 13px;border-radius:14px;
+  background:rgba(226,72,11,.06);border:1px solid rgba(226,72,11,.14);
+  font-size:11px;line-height:1.7;color:#7A5B49;
+}
+.note b{color:var(--deep);flex:0 0 auto;font-size:11px}
+
+/* scroll hint */
+.more{
+  position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 74px);height:80px;
+  pointer-events:none;opacity:0;transition:opacity .35s ease;z-index:20;
+  background:linear-gradient(to top,#FFF3EA 12%,rgba(255,243,234,.86) 48%,transparent);
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;
+}
+.more span{
+  display:inline-flex;align-items:center;gap:5px;font-size:10px;letter-spacing:.12em;color:#B07B5C;
+}
+.more .ic{width:12px;height:12px;animation:bob 1.8s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+.page.has-more .more{opacity:1}
+
+/* ============ chapter ============ */
+.chap{
+  position:relative;height:100%;display:flex;flex-direction:column;
+  padding:calc(env(safe-area-inset-top) + 34px) 26px calc(env(safe-area-inset-bottom) + 100px);
+  color:#FFF2E7;overflow:hidden;
+}
+.page--chapter[data-tone="a"] .chap{background:radial-gradient(120% 80% at 90% 6%,rgba(255,106,27,.34),transparent 58%),linear-gradient(170deg,#231206,#120A05 60%)}
+.page--chapter[data-tone="b"] .chap{background:radial-gradient(120% 80% at 88% 10%,rgba(255,140,45,.34),transparent 58%),linear-gradient(170deg,#251506,#130B05 60%)}
+.page--chapter[data-tone="c"] .chap{background:radial-gradient(120% 80% at 88% 8%,rgba(255,92,42,.32),transparent 58%),linear-gradient(170deg,#251006,#130805 60%)}
+.page--chapter[data-tone="d"] .chap{background:radial-gradient(120% 80% at 86% 12%,rgba(255,158,60,.30),transparent 58%),linear-gradient(170deg,#261806,#140C05 60%)}
+.chap::before{content:"";position:absolute;inset:0;background-image:var(--noise);opacity:.45;mix-blend-mode:overlay;pointer-events:none}
+.chap__bg{
+  position:absolute;right:-14%;top:12%;width:70%;aspect-ratio:1;opacity:.10;
+  color:#FFB37A;
+}
+.chap__bg .ic{width:100%;height:100%;stroke-width:.55}
+.chap__no{
+  position:relative;font-size:clamp(92px,25vw,116px);line-height:.88;font-weight:900;letter-spacing:-.06em;
+  color:transparent;-webkit-text-stroke:1.2px rgba(255,150,90,.45);font-variant-numeric:tabular-nums;
+}
+.chap__en{
+  position:relative;margin-top:8px;font-size:10.5px;letter-spacing:.34em;color:rgba(255,185,140,.6);
+}
+.chap__body{position:relative;margin-top:auto;margin-bottom:auto}
+.chap__name{
+  position:relative;font-size:clamp(46px,13.6vw,58px);line-height:1.06;font-weight:900;letter-spacing:-.02em;
+  color:#FFF3E9;
+}
+.chap__tag{
+  position:relative;margin-top:12px;font-size:15px;letter-spacing:.05em;color:#FFB98A;
+}
+.chap__intro{
+  position:relative;margin-top:14px;font-size:12px;line-height:1.9;color:rgba(255,218,194,.62);max-width:19em;
+}
+.chap__tags{position:relative;display:flex;flex-wrap:wrap;gap:6px;margin-top:20px;max-width:100%}
+.chap__tags li{
+  font-size:10.5px;padding:6px 11px;border-radius:999px;color:rgba(255,205,175,.8);
+  border:1px solid rgba(255,150,90,.24);background:rgba(255,120,40,.07);
+}
+.chap__bars{position:relative;margin-top:22px;display:flex;flex-direction:column;gap:11px;max-width:262px}
+.chap__bar{display:flex;align-items:center;gap:10px;font-size:10.5px;color:rgba(255,210,180,.55)}
+.chap__bar em{font-style:normal;flex:0 0 78px;letter-spacing:.02em}
+.chap__bar i{flex:1;height:4px;border-radius:3px;background:rgba(255,255,255,.10);overflow:hidden}
+.chap__bar i::after{content:"";display:block;height:100%;width:var(--w);border-radius:3px;background:linear-gradient(90deg,#FFB877,#FF6A1B)}
+.chap__bar u{text-decoration:none;flex:0 0 auto;color:#FFC79C;font-variant-numeric:tabular-nums}
+.chap__foot{position:relative;display:flex;align-items:center;gap:12px;font-size:10.5px;letter-spacing:.1em;color:rgba(255,200,165,.5)}
+.chap__foot b{color:#FFD0A8;font-size:13px;font-weight:800;margin-right:3px}
+.chap__foot i{width:1px;height:12px;background:rgba(255,160,110,.28)}
+
+/* ============ toc page ============ */
+.page--toc{background:linear-gradient(180deg,#FFF9F4,#FFEFE2)}
+.tocwrap{
+  position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;
+  padding:calc(env(safe-area-inset-top) + 28px) 22px calc(env(safe-area-inset-bottom) + 104px);
+}
+.tocwrap::-webkit-scrollbar{width:0}
+.tocwrap h2{font-size:30px;font-weight:900;letter-spacing:-.02em;margin-top:6px}
+.tocwrap .en{font-size:9.5px;letter-spacing:.34em;color:var(--o);font-weight:700}
+.tocwrap .lead{margin-top:6px;font-size:12px;color:var(--muted);line-height:1.7}
+.toclist{margin-top:6px;display:flex;flex-direction:column;gap:0}
+.trow{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  padding:8px 2px;border-bottom:1px solid rgba(226,72,11,.10);
+}
+.trow__no{
+  flex:0 0 30px;font-size:11px;font-weight:800;color:var(--o);
+  font-variant-numeric:tabular-nums;letter-spacing:.02em;
+}
+.trow__txt{flex:1;min-width:0}
+.trow__txt b{display:block;font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.trow__txt i{display:block;margin-top:2px;font-style:normal;font-size:10.5px;color:var(--muted);letter-spacing:.02em}
+.trow__pg{font-size:10.5px;color:#B78F76;font-variant-numeric:tabular-nums}
+.trow--sub{padding:6px 2px 6px 30px;border-bottom:1px dashed rgba(226,72,11,.10)}
+.trow--sub .trow__dot{width:4px;height:4px;border-radius:50%;background:var(--o3);flex:0 0 auto}
+.trow--sub .trow__txt b{font-size:11.5px;font-weight:600;color:#6B5344}
+.trow--sub .trow__pg{font-size:10px;color:#C0A08C}
+.trow--tail{margin-top:8px}
+.toc-note{
+  margin-top:9px;padding-left:30px;font-size:10px;line-height:1.7;color:#B08F7B;max-width:21em;
+}
+.trow:active{background:rgba(255,120,40,.05)}
+
+/* ============ spec page ============ */
+.spec__cards{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.spec__card{
+  display:flex;gap:12px;padding:14px;border-radius:16px;background:var(--paper);
+  border:1px solid rgba(226,72,11,.1);box-shadow:var(--shadow);
+}
+.spec__ic{
+  flex:0 0 34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:16px;
+  background:linear-gradient(150deg,#FFEAD7,#FFD3AC);color:var(--deep);
+}
+.spec__ic .ic{width:17px;height:17px}
+.spec__card h4{font-size:12.5px;font-weight:800;color:var(--ink)}
+.spec__card p{margin-top:4px;font-size:11.5px;line-height:1.65;color:#7A6152}
+
+/* fine print */
+.fine{margin-top:20px;font-size:10px;line-height:1.75;color:#AC8B77;letter-spacing:.02em}
+
+/* ============ end page ============ */
+.page--end{background:#140C07}
+.end{
+  position:relative;height:100%;display:flex;flex-direction:column;overflow:hidden;
+  padding:calc(env(safe-area-inset-top) + 40px) 26px calc(env(safe-area-inset-bottom) + 100px);
+  background:
+    radial-gradient(100% 70% at 50% 120%,rgba(255,110,30,.42),transparent 62%),
+    radial-gradient(80% 50% at 10% 0%,rgba(255,150,60,.16),transparent 60%),
+    linear-gradient(180deg,#1B1009,#0C0704);
+  color:#FFF3E8;text-align:left;
+}
+.end::before{content:"";position:absolute;inset:0;background-image:var(--noise);opacity:.45;mix-blend-mode:overlay;pointer-events:none}
+.end__mark{position:relative;font-size:10px;letter-spacing:.3em;color:rgba(255,185,140,.55)}
+.end h2{position:relative;margin-top:auto;font-size:clamp(28px,8.4vw,36px);line-height:1.28;font-weight:900;letter-spacing:-.02em}
+.end h2 em{font-style:normal;background:linear-gradient(100deg,#FFD08A,#FF7A24);-webkit-background-clip:text;background-clip:text;color:transparent}
+.end p{position:relative;margin-top:12px;font-size:12px;line-height:1.85;color:rgba(255,220,195,.55);max-width:20em}
+.end__cta{position:relative;margin-top:26px;display:flex;flex-direction:column;gap:10px}
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:14px;
+  font-size:13.5px;font-weight:700;letter-spacing:.02em;transition:transform .16s,filter .2s;
+}
+.btn:active{transform:scale(.98)}
+.btn--primary{
+  background:linear-gradient(100deg,#FF8A34,#FF5A0E);color:#fff;
+  box-shadow:0 16px 30px -14px rgba(255,96,24,.85),inset 0 1px 0 rgba(255,255,255,.24);
+}
+.btn--ghost{background:rgba(255,255,255,.06);color:#FFD3AF;border:1px solid rgba(255,150,90,.26)}
+.btn .ic{width:16px;height:16px}
+.end__promise{position:relative;display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
+.end__promise li{
+  display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:999px;
+  font-size:10px;letter-spacing:.04em;color:rgba(255,210,182,.72);
+  background:rgba(255,120,50,.08);border:1px solid rgba(255,150,90,.18);
+}
+.end__promise .ic{width:11px;height:11px;color:#FF9A55}
+.end__plats{
+  position:relative;margin-top:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:7px;
+}
+.end__plat{
+  display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 3px 11px;border-radius:13px;
+  background:rgba(255,255,255,.045);border:1px solid rgba(255,150,90,.16);
+  font-size:10px;color:rgba(255,210,180,.7);letter-spacing:.02em;
+}
+.end__plat .ic{width:15px;height:15px;color:#FFB37A;stroke-width:1.5}
+.end__foot{position:relative;margin-top:18px;display:flex;align-items:center;justify-content:space-between;font-size:10px;letter-spacing:.12em;color:rgba(255,190,155,.38)}
+.end__foot b{color:rgba(255,200,165,.62);font-weight:600;letter-spacing:.06em}
+
+/* ============ toc overlay ============ */
+.toc-ov{
+  position:absolute;inset:0;z-index:70;transform:translateY(101%);
+  transition:transform .5s cubic-bezier(.22,.66,.24,1);
+  background:rgba(15,9,5,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;color:#FFF1E5;
+}
+.toc-ov.is-open{transform:none}
+.toc-ov__head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(env(safe-area-inset-top) + 20px) 20px 14px;
+  border-bottom:1px solid rgba(255,150,90,.14);
+}
+.toc-ov__head b{font-size:15px;letter-spacing:.1em;font-weight:800}
+.toc-ov__head span{font-size:9.5px;letter-spacing:.28em;color:rgba(255,180,140,.5);margin-left:8px}
+.toc-ov__close{
+  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.07);color:#FFCDA8;font-size:15px;
+}
+.toc-ov__body{flex:1;overflow-y:auto;padding:10px 20px calc(env(safe-area-inset-bottom) + 28px);scrollbar-width:none}
+.toc-ov__body::-webkit-scrollbar{width:0}
+.orr{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:11px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.orr__no{flex:0 0 26px;font-size:10px;color:var(--o2);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.orr__t{flex:1;min-width:0}
+.orr__t b{display:block;font-size:13.5px;font-weight:700;color:#FFE9D8}
+.orr__t i{display:block;margin-top:1px;font-style:normal;font-size:10px;color:rgba(255,190,160,.42)}
+.orr__pg{font-size:10px;color:rgba(255,190,160,.45);font-variant-numeric:tabular-nums}
+.orr--sub{padding:8px 0 8px 26px}
+.orr--sub .orr__t b{font-size:11.5px;font-weight:500;color:rgba(255,225,205,.62)}
+.orr.is-cur .orr__t b{color:var(--o3)}
+.orr.is-cur{background:linear-gradient(90deg,rgba(255,120,40,.14),transparent)}
+
+/* toast */
+.toast{
+  position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 76px);transform:translate(-50%,14px);
+  z-index:90;padding:9px 16px;border-radius:999px;font-size:11.5px;letter-spacing:.04em;
+  background:rgba(28,16,9,.94);color:#FFE6D4;border:1px solid rgba(255,150,90,.28);
+  opacity:0;pointer-events:none;transition:opacity .28s,transform .28s;
+  box-shadow:0 16px 30px -14px rgba(0,0,0,.7);
+}
+.toast.is-on{opacity:1;transform:translate(-50%,0)}
+
+/* static / reduced */
+.is-static .track,.is-static .rv,.is-static .hud{transition:none !important}
+.is-static .rv{opacity:1 !important;transform:none !important}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001s !important;transition-duration:.001s !important}
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="book" id="book">
+    <div class="progress"><div class="progress__fill" id="progressFill"></div></div>
+    <div class="track" id="track"></div>
+
+    <div class="hud" id="hud">
+      <button class="hud__btn" id="btnToc" aria-label="打开目录">
+        <svg class="ic" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M4 6h16M4 12h10M4 18h13"/></svg>
+        <span>目录</span>
+      </button>
+      <span class="hud__sep"></span>
+      <div class="hud__nav">
+        <button class="hud__arrow" id="btnPrev" aria-label="上一页">
+          <svg class="ic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <span class="hud__count"><b id="curPage">01</b><i>/</i><span id="totPage">19</span></span>
+        <button class="hud__arrow" id="btnNext" aria-label="下一页">
+          <svg class="ic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="toc-ov" id="tocOv" aria-hidden="true">
+      <div class="toc-ov__head">
+        <div><b>目录</b><span>CONTENTS</span></div>
+        <button class="toc-ov__close" id="btnTocClose" aria-label="关闭目录">✕</button>
+      </div>
+      <div class="toc-ov__body" id="tocBody"></div>
+    </div>
+
+    <div class="toast" id="toast">已复制链接</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- icons ---------- */
+  var ICONS = {
+    douyin:'<path d="M14.6 3.5v9.6a3.7 3.7 0 1 1-3.3-3.68"/><path d="M14.6 3.5c.45 2.35 2 3.9 4.4 4.15"/>',
+    channels:'<circle cx="12" cy="12" r="8.4"/><path d="M10.2 8.6l5.6 3.4-5.6 3.4z"/>',
+    red:'<rect x="4.6" y="3.8" width="14.8" height="16.4" rx="4.2"/><path d="M8.6 8.6h6.8M8.6 12h6.8M8.6 15.4h4.2"/>',
+    private:'<path d="M4.2 7.2A2.6 2.6 0 0 1 6.8 4.6h6.3a2.6 2.6 0 0 1 2.6 2.6v3.6a2.6 2.6 0 0 1-2.6 2.6H9.6L6 16.4v-3.4"/><path d="M17.4 9.6h.4a2.4 2.4 0 0 1 2.4 2.4v3.2a2.4 2.4 0 0 1-2.4 2.4h-.2l-2.2 2v-2.6"/>',
+    arrowRight:'<path d="M5 12h13M13 6.5l5.5 5.5L13 17.5"/>',
+    share:'<path d="M12 15V4M8 7.5L12 3.8l4 3.7"/><path d="M5.5 13.5v4.2A2.3 2.3 0 0 0 7.8 20h8.4a2.3 2.3 0 0 0 2.3-2.3v-4.2"/>',
+    home:'<path d="M4.5 10.5L12 4.2l7.5 6.3"/><path d="M6.6 9.8V19a1 1 0 0 0 1 1h8.8a1 1 0 0 0 1-1V9.8"/>',
+    spark:'<path d="M12 3.6l1.7 4.6 4.7 1.7-4.7 1.7L12 16.2l-1.7-4.6L5.6 9.9l4.7-1.7z"/><path d="M18.4 15.2l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
+    check:'<path d="M4.5 12.5l4.4 4.4L19.5 6.5"/>',
+    card:'<rect x="3.4" y="5.6" width="17.2" height="12.8" rx="3"/><path d="M3.4 10h17.2"/>',
+    clock:'<circle cx="12" cy="12" r="8.4"/><path d="M12 7.6V12l3 2"/>',
+    users:'<circle cx="9.4" cy="9" r="3.1"/><path d="M3.8 19.2c0-3 2.5-5.2 5.6-5.2s5.6 2.2 5.6 5.2"/><path d="M16 6.2a3 3 0 0 1 0 5.8M17.4 14.4c1.7.6 2.9 2.2 2.9 4.2"/>'
+  };
+  function ic(name, style){
+    return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"' + (style?' style="'+style+'"':'') + '>' + (ICONS[name]||'') + '</svg>';
+  }
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  /* ---------- data ---------- */
+  var CH = [
+    {
+      no:'01', name:'抖音', en:'DOUYIN', tone:'a', icon:'douyin',
+      tag:'到店转化的主战场',
+      intro:'同城生意的第一入口。从门店基建、团购套餐到达人探店与真人直播，把附近的人，变成进店的人。',
+      keywords:['门店装修','团购套餐','本地推','达人探店'],
+      groups:[
+        { name:'基础运营服务', items:[
+          ['抖音门店美化装修','线上门店整体排版布局、门店详情、服务设施配置、门店相册美化、三联图设计'],
+          ['后台使用培训','抖音来客的使用、企业号使用、如何发布视频、如何开播、简单的对热点的捕捉'],
+          ['帐号经营分提分','完成每周抖音下发的任务，用于提高并保持经营分，维持门店 POI 热度'],
+          ['套餐设计及美工设计','市场调研、团单设计、套餐前缀热点词捕捉、商品头图设计、凸显品牌调性'],
+          ['蓝V账号运营','蓝V 号全托管代运营（视频、文案、直播培训陪跑）'],
+          ['门店搜索关键词优化','打造门店专属关键词热点、配置与目标消费者高度吻合的标签'],
+          ['每月平台活动申报','平台大额流量激励申报、平台本地推'],
+          ['每月数据分析汇报','每月数据汇报、分析商品的转化、人群画像，通过复盘制定更好的推广方案']
+        ]},
+        { name:'推广服务', items:[
+          ['LV3+ 本地云探达人 10 条/月','本地云探达人线上推广，每季度 30 条'],
+          ['视频 15 条/月','人工专业文案视频剪辑，提高视频专业度及流量曝光'],
+          ['真人直播 1 场/月','含主播、运营、场控、直播话术制定等'],
+          ['摄影师到店拍摄素材 1 次','单地单次拍摄 50 段视频，总时长不低于 1 小时']
+        ]}
+      ],
+      pages:[
+        { title:'基础运营服务', lead:'门店没装修好，流量来了也接不住。先把线上门面做扎实。', groups:[0],
+          stats:[{n:'8',u:'项',l:'经营底盘'},{n:'1',u:'套',l:'月度数据复盘'},{n:'4',u:'周',l:'持续提分任务'}] },
+        { title:'推广服务', lead:'内容、直播、达人三线并行，把曝光变成真实到店。', groups:[1],
+          stats:[{n:'15',u:'条',l:'视频 / 月'},{n:'1',u:'场',l:'真人直播 / 月'},{n:'10',u:'条',l:'云探达人 / 月'}],
+          quote:'内容打底、达人扩散、直播收割 —— 三条线同时在同城起量，到店才稳。' }
+      ]
+    },
+    {
+      no:'02', name:'视频号', en:'CHANNELS', tone:'b', icon:'channels',
+      tag:'信任与品牌的沉淀池',
+      intro:'微信生态里的信任资产。认证、诊断、拍剪与月报，让账号越来越专业，也让客户越来越放心。',
+      keywords:['蓝V认证','账号诊断','拍摄剪辑','运营月报'],
+      groups:[
+        { name:'账号运营', items:[
+          ['蓝V认证','代操作蓝V认证，展示企业信息、提升企业信用及形象（认证费用甲方承担）'],
+          ['检测分析','账号检测分析，推广情况分析，行业分析'],
+          ['标签打造','人群画像及行为、兴趣标签垂直'],
+          ['视频标签','针对目标人群进行标签推送视频、产品应用场景、人工文案编写'],
+          ['账号多维度诊断','内容匹配度诊断、投稿策略诊断、标签排名诊断、互动行为诊断'],
+          ['账号粉丝画像','大数据分析短视频账号的粉丝特征与构成，构建账号粉丝画像'],
+          ['热门话题','视频发布的同时为每条视频搭配行业热门话题，增加视频自然流量'],
+          ['SEO 设置','运营人员分析设置关键词，进行 SEO 关键词组设置']
+        ]},
+        { name:'视频拍剪', items:[
+          ['拍摄指导','专业摄影指导'],
+          ['上门拍摄','摄影师上门拍摄，单地单次拍摄 50 段视频，总时长不低于 1 小时'],
+          ['视频剪辑','视频号人工剪辑视频同步发布 15 条/月']
+        ]},
+        { name:'运营服务', items:[
+          ['运营月报','每月数据总结分析和下阶段运营计划']
+        ]}
+      ],
+      pages:[
+        { title:'账号运营', lead:'先让账号被正确识别，再让内容被正确的人看见。', groups:[0] },
+        { title:'拍剪与运营', lead:'专业拍摄与稳定输出，是视频号增长的地基。', groups:[1,2],
+          stats:[{n:'15',u:'条',l:'剪辑发布 / 月'},{n:'50',u:'段',l:'素材 / 次拍摄'},{n:'1',u:'次',l:'摄影师上门'}],
+          quote:'稳定的更新量，比偶尔的爆款更能养出一个账号。' }
+      ]
+    },
+    {
+      no:'03', name:'小红书', en:'RED', tone:'c', icon:'red',
+      tag:'种草口碑的放大器',
+      intro:'决策前的最后一站。账号定位、内容日历与真实 UGC 笔记，把口碑写成能被搜索到的证据。',
+      keywords:['账号定位','内容日历','笔记运营','UGC 种草'],
+      groups:[
+        { name:'账号创建和定位', items:[
+          ['主账号搭建','创建并认证小红书主账号，搭建匹配的用户名和头像'],
+          ['主账号定位','确定主账号定位和内容方向，撰写简介并规划选题图文内容'],
+          ['企业号协助','协助用户完成企业账号认证，提供流程指导支持']
+        ]},
+        { name:'内容规划', items:[
+          ['UGC 账号定位','针对行业对标笔记，通过话术精准种草用户，吸引行业潜在客户资源'],
+          ['内容类型','确定统一的内容形式与风格（图文），保持账号风格的一致'],
+          ['内容日历','制定内容发布排期计划，规划核心内容主题和账号发布频率'],
+          ['创意策划','根据平台热门话题创作内容，定期收集新点子，确保内容的丰富']
+        ]},
+        { name:'互动运营', items:[
+          ['评论和私信管理','对账号的管理评论和私信，及时回复粉丝，增强互动，提高粉丝粘性'],
+          ['社区互动','通过在平台笔记下适度评论互动，提升账号活跃度和互动权重']
+        ]},
+        { name:'数据分析', items:[
+          ['数据监控','定期查看和监控账号数据，关注粉丝增长、内容互动和转化情况，参照行业数据进行评估和优化'],
+          ['调整策略','根据数据分析，及时优化内容和运营策略，推动账号持续增长']
+        ]},
+        { name:'账号运营', items:[
+          ['15 篇笔记','按计划定期创作发布内容，保持账号的活跃度和用户吸引力'],
+          ['话题策划','策划热门话题选题，结合创作灵感，提高内容曝光度和用户参与度'],
+          ['互动管理','管理和回复笔记评论及私信，确保及时互动']
+        ]},
+        { name:'UGC 用户发声', items:[
+          ['2-5 篇 / 月种草','通过活跃 UGC 用户分享服务过程和结果的好评发声笔记，增强真实的用户口碑传播']
+        ]}
+      ],
+      pages:[
+        { title:'账号与内容', lead:'账号要像一本杂志：定位清晰、栏目稳定、选题有节奏。', groups:[0,1] },
+        { title:'互动与数据', lead:'把每一次互动，都变成一次种草机会。', groups:[2,3],
+          quote:'数据不是用来汇报的，是用来决定下一步做什么的。' },
+        { title:'运营与发声', lead:'稳定更新节奏 + 真实口碑，是小红书最有效的增长组合。', groups:[4,5],
+          stats:[{n:'15',u:'篇',l:'笔记 / 月'},{n:'2-5',u:'篇',l:'UGC 种草 / 月'},{n:'3',u:'项',l:'账号运营动作'}] }
+      ]
+    },
+    {
+      no:'04', name:'私域运营', en:'PRIVATE', tone:'d', icon:'private',
+      tag:'复购与留存的根据地',
+      intro:'复购真正发生的地方。社群 SOP、企微与营销工具，让每一次触达都有承接、有回响。',
+      keywords:['社群 SOP','企微配置','营销工具','1v1 客服'],
+      groups:[
+        { name:'社群营销与规划', items:[
+          ['社群规划','制定社群发展策略，搭建社群架构'],
+          ['内容管理','客服及群标准 SOP 搭建'],
+          ['用户管理','用户吸纳流程及标签配置'],
+          ['活动策划','社群活动策划及落地']
+        ]},
+        { name:'系统支持', items:[
+          ['店铺搭建','趣玩邦线上店铺产品搭建'],
+          ['企微配置','企微号码配置'],
+          ['营销系统','抽奖等营销工具配置'],
+          ['社群配置','专属渠道二维码配置'],
+          ['专属帐号','专属帐号标准创建']
+        ]},
+        { name:'数据分析', items:[
+          ['数据监控','定期查看和监控账号数据，关注粉丝增长、内容互动和转化情况'],
+          ['调整策略','根据数据分析，及时优化内容和运营策略，推动持续增长']
+        ]},
+        { name:'运营优化', items:[
+          ['IP 教育优化','结合品牌高发调整用户 IP 教育优化'],
+          ['新人活动优化','新人活动制定及策划优化'],
+          ['增值选品投放优化','增值产品选品投放优化']
+        ]},
+        { name:'内容运营', items:[
+          ['发布任务','新群内容生产及裂变任务发放'],
+          ['话题策划','周社群内容'],
+          ['互动管理','月朋友圈内容']
+        ]},
+        { name:'专属客服互动运营', items:[
+          ['评论和私信管理','管理用户私信，及时回复粉丝，增强互动提高粘性'],
+          ['客服服务时间','提供一对一专属客服服务，确保服务质量与响应时效']
+        ]}
+      ],
+      pages:[
+        { title:'社群与系统', lead:'把公域来的客人，留在自己的池子里。', groups:[0,1], layout:'mixed' },
+        { title:'数据与优化', lead:'用数据校准动作，让社群持续产生价值。', groups:[2,3] },
+        { title:'内容与客服', lead:'内容养熟，客服承接，社群才会真正活起来。', groups:[4,5],
+          quote:'社群的价值不在人数多少，而在每一次回应是否及时。' }
+      ]
+    }
+  ];
+
+  /* ---------- page assembly ---------- */
+  var PAGES = [];
+  PAGES.push({ type:'cover' });
+  PAGES.push({ type:'intro' });
+  PAGES.push({ type:'toc' });
+  CH.forEach(function(ch){
+    var total = 0; ch.groups.forEach(function(g){ total += g.items.length; });
+    ch.total = total;
+    ch.blocks = ch.groups.length;
+    PAGES.push({ type:'chapter', ch:ch });
+    ch.pages.forEach(function(p){ p.ch = ch; p.type = 'content'; PAGES.push(p); });
+  });
+  PAGES.push({ type:'spec' });
+  PAGES.push({ type:'end' });
+  var TOTAL = PAGES.length;
+
+  /* ---------- renderers ---------- */
+  function coverHTML(){
+    return '<section class="page page--cover">' +
+      '<div class="cover">' +
+        '<svg class="cover__ring" viewBox="0 0 400 400" aria-hidden="true"><circle cx="200" cy="200" r="128"/><circle cx="200" cy="200" r="176"/></svg>' +
+        '<div class="cover__glow"></div>' +
+        '<div class="cover__top rv" style="--d:.04s">' +
+          '<span class="yr">2026</span><span class="cover__sep"></span><span>PRODUCT&nbsp;MANUAL</span>' +
+        '</div>' +
+        '<div class="cover__body">' +
+          '<div class="cover__badge rv" style="--d:.12s"><i></i><span>新媒体 · 营销共建</span></div>' +
+          '<h1 class="cover__title rv" style="--d:.2s"><span>营销共建</span><span class="cover__title--hl">新媒体全案</span></h1>' +
+          '<p class="cover__platforms rv" style="--d:.3s">抖音 <b>·</b> 视频号 <b>·</b> 小红书 <b>·</b> 私域社群</p>' +
+          '<p class="cover__desc rv" style="--d:.38s"><span>从门店装修到内容种草，从直播转化到私域复购，</span><span>一套真正能落地执行的新媒体经营方案。</span></p>' +
+        '</div>' +
+        '<div class="cover__foot rv" style="--d:.46s">' +
+          '<div class="cover__meta">' +
+            '<div><b>4</b><span>大平台</span></div>' +
+            '<div><b>58</b><span>项服务</span></div>' +
+            '<div><b>1v1</b><span>专属运营</span></div>' +
+          '</div>' +
+          '<div class="cover__hint">滑动翻阅' + ic('arrowRight') + '</div>' +
+        '</div>' +
+      '</div></section>';
+  }
+
+  function introHTML(){
+    var tiles = CH.map(function(c){
+      return '<button class="ptile rv" data-jump-ch="' + c.no + '">' +
+        '<span class="ptile__ic">' + ic(c.icon) + '</span>' +
+        '<span class="ptile__name">' + c.name + '</span>' +
+        '<span class="ptile__tag">' + c.tag + '</span>' +
+        '<span class="ptile__n"><b>' + c.total + '</b> 项</span>' +
+      '</button>';
+    }).join('');
+
+    var steps = ['内容生产','平台分发','到店转化','私域复购'];
+    var stepHTML = steps.map(function(s,i){
+      return '<li class="step rv" style="--d:' + (0.3 + i*0.07) + 's"><b>' + pad(i+1) + '</b><span>' + s + '</span></li>';
+    }).join('');
+
+    var segColors = ['#FF5A0E','#FF8330','#FFA95C','#FFC894'];
+    var totalItems = 0;
+    CH.forEach(function(c){ totalItems += c.total; });
+    var barHTML = CH.map(function(c,i){
+      return '<i style="--w:' + (c.total / totalItems * 100).toFixed(2) + '%;--c:' + segColors[i] + '"></i>';
+    }).join('');
+    var legendHTML = CH.map(function(c,i){
+      return '<li style="--c:' + segColors[i] + '"><em></em>' + c.name + '<b>' + c.total + '</b></li>';
+    }).join('');
+
+    return '<section class="page page--content page--intro">' +
+      '<div class="scroll">' +
+        '<header class="phead">' +
+          '<span class="kicker rv">OVERVIEW · 全案概览</span>' +
+          '<h2 class="rv" style="--d:.06s">一套方案<br/>四个经营阵地</h2>' +
+          '<p class="lead rv" style="--d:.12s">四个平台不是四个各自为战的账号，而是一条从种草、转化到复购的完整链路。</p>' +
+        '</header>' +
+        '<div class="pgrid">' + tiles + '</div>' +
+        '<div class="flow rv" style="--d:.28s">' +
+          '<div class="flow__t"><span>服务链路</span><i></i></div>' +
+          '<ul class="steps">' + stepHTML + '</ul>' +
+        '</div>' +
+        '<div class="dist rv" style="--d:.44s">' +
+          '<div class="dist__head"><span>服务项分布</span><span>共 ' + totalItems + ' 项</span></div>' +
+          '<div class="dist__bar">' + barHTML + '</div>' +
+          '<ul class="dist__legend">' + legendHTML + '</ul>' +
+        '</div>' +
+        '<div class="note rv" style="--d:.5s"><b>共建</b><span>深度参与而非外包交付 —— 我们与门店一起定策略、出内容、看数据、做复盘。</span></div>' +
+        '<button class="nextcard rv" style="--d:.56s" data-jump-ch="01">' +
+          '<span class="nextcard__k">接下来</span>' +
+          '<span class="nextcard__t">01 抖音 · 到店转化的主战场</span>' +
+          '<span class="nextcard__a">→</span>' +
+        '</button>' +
+      '</div></section>';
+  }
+
+  function tocHTML(){
+    var rows = '';
+    PAGES.forEach(function(p,i){
+      if(p.type === 'chapter'){
+        rows += '<button class="trow" data-jump="' + i + '">' +
+          '<span class="trow__no">' + p.ch.no + '</span>' +
+          '<span class="trow__txt"><b>' + p.ch.name + '</b><i>' + p.ch.tag + ' · ' + p.ch.total + ' 项服务</i></span>' +
+          '<span class="trow__pg">' + pad(i+1) + '</span></button>';
+      } else if(p.type === 'content'){
+        rows += '<button class="trow trow--sub" data-jump="' + i + '">' +
+          '<span class="trow__dot"></span>' +
+          '<span class="trow__txt"><b>' + p.title + '</b></span>' +
+          '<span class="trow__pg">' + pad(i+1) + '</span></button>';
+      }
+    });
+    rows += '<p class="toc-note rv">服务说明与开始共建见第 ' + (TOTAL-1) + '–' + TOTAL + ' 页 · 也可点击底部「目录」快速跳转</p>';
+
+    return '<section class="page page--toc">' +
+      '<div class="tocwrap">' +
+        '<span class="en rv">CONTENTS</span>' +
+        '<h2 class="rv" style="--d:.06s">目录</h2>' +
+        '<p class="lead rv" style="--d:.12s">共 ' + TOTAL + ' 页 · 4 大平台 · 58 项服务细项</p>' +
+        '<div class="toclist">' + rows + '</div>' +
+      '</div></section>';
+  }
+
+  function chapterHTML(ch, i){
+    var bars = ch.groups.map(function(g){
+      var w = Math.round(g.items.length / 8 * 100);
+      return '<div class="chap__bar"><em>' + g.name + '</em><i style="--w:' + w + '%"></i><u>' + g.items.length + '</u></div>';
+    }).join('');
+
+    return '<section class="page page--chapter" data-tone="' + ch.tone + '">' +
+      '<div class="chap">' +
+        '<div class="chap__bg">' + ic(ch.icon) + '</div>' +
+        '<span class="chap__no rv">' + ch.no + '</span>' +
+        '<span class="chap__en rv" style="--d:.08s">' + ch.en + '</span>' +
+        '<div class="chap__body">' +
+          '<h2 class="chap__name rv" style="--d:.14s">' + ch.name + '</h2>' +
+          '<p class="chap__tag rv" style="--d:.2s">' + ch.tag + '</p>' +
+          '<p class="chap__intro rv" style="--d:.24s">' + ch.intro + '</p>' +
+          '<ul class="chap__tags rv" style="--d:.3s">' + ch.keywords.map(function(k){ return '<li>' + k + '</li>'; }).join('') + '</ul>' +
+          '<div class="chap__bars rv" style="--d:.36s">' + bars + '</div>' +
+        '</div>' +
+        '<div class="chap__foot rv" style="--d:.38s">' +
+          '<span><b>' + ch.total + '</b>项服务</span><i></i><span><b>' + ch.blocks + '</b>大板块</span>' +
+        '</div>' +
+      '</div></section>';
+  }
+
+  function itemHTML(it, n, delay){
+    return '<li class="item rv" style="--d:' + delay + 's">' +
+      '<span class="item__no">' + pad(n) + '</span>' +
+      '<div class="item__body"><h4>' + esc(it[0]) + '</h4><p>' + esc(it[1]) + '</p></div>' +
+    '</li>';
+  }
+
+  function contentHTML(p){
+    var statsHTML = '';
+    if(p.stats && p.stats.length){
+      statsHTML = '<div class="statrow">' + p.stats.map(function(s,i){
+        return '<div class="stat rv" style="--d:' + (0.1 + i*0.05) + 's"><b>' + s.n +
+          (s.u ? '<small>' + s.u + '</small>' : '') + '</b><span>' + s.l + '</span></div>';
+      }).join('') + '</div>';
+    }
+
+    var d = 0.14, n = 0, body = '';
+    p.groups.forEach(function(gi){
+      var g = p.ch.groups[gi];
+      var isPill = (p.layout === 'mixed' && gi === 1);
+      body += '<section class="group">';
+      body += '<div class="group__head rv" style="--d:' + d.toFixed(2) + 's">' +
+                '<span class="group__idx">SERVICE</span>' +
+                '<h3>' + g.name + '</h3>' +
+                '<span class="group__n">' + g.items.length + ' 项</span>' +
+              '</div>';
+      d += 0.03;
+      if(isPill){
+        body += '<ul class="pills">' + g.items.map(function(it){
+          n++;
+          var h = '<li class="pill rv" style="--d:' + d.toFixed(2) + 's"><b>' + esc(it[0]) + '</b><span>' + esc(it[1]) + '</span></li>';
+          d += 0.035;
+          return h;
+        }).join('') + '</ul>';
+      } else {
+        body += '<ul class="list">' + g.items.map(function(it){
+          n++;
+          var h = itemHTML(it, n, d.toFixed(2));
+          d += 0.045;
+          return h;
+        }).join('') + '</ul>';
+      }
+      body += '</section>';
+    });
+
+    if(p.quote){
+      body += '<figure class="quote rv" style="--d:' + (d+0.05).toFixed(2) + 's">' +
+        '<span class="quote__mark">”</span><span class="quote__tag">观点</span>' +
+        '<blockquote>' + esc(p.quote) + '</blockquote></figure>';
+    }
+    if(p.hero){
+      body += '<div class="hero rv" style="--d:' + (d+0.05).toFixed(2) + 's">' +
+        '<span class="hero__tag">' + p.hero.tag + '</span>' +
+        '<div class="hero__main"><b>' + p.hero.big + '</b><span>' + p.hero.unit + '<br/>' + p.hero.t + '</span></div>' +
+        '<p>' + esc(p.hero.d) + '</p>' +
+      '</div>';
+    }
+
+    if(p.note){
+      body += '<div class="note rv" style="--d:' + (d+0.05).toFixed(2) + 's">' +
+        '<b>' + p.note.b + '</b><span>' + esc(p.note.t) + '</span></div>';
+    }
+
+    return '<section class="page page--content">' +
+      '<div class="scroll">' +
+        '<header class="phead">' +
+          '<span class="kicker rv">' + p.ch.no + ' / ' + p.ch.name + '</span>' +
+          '<h2 class="rv" style="--d:.05s">' + p.title + '</h2>' +
+          '<p class="lead rv" style="--d:.1s">' + p.lead + '</p>' +
+        '</header>' +
+        statsHTML + body +
+      '</div>' +
+      '<div class="more"><span>继续上滑 · 查看更多' + ic('arrowRight') + '</span></div>' +
+    '</section>';
+  }
+
+  function specHTML(){
+    return '<section class="page page--content page--spec">' +
+      '<div class="scroll">' +
+        '<header class="phead">' +
+          '<span class="kicker rv">NOTES · 服务说明</span>' +
+          '<h2 class="rv" style="--d:.05s">服务说明<br/>与交付约定</h2>' +
+          '<p class="lead rv" style="--d:.1s">在开始共建之前，先把这些关键信息说清楚。</p>' +
+        '</header>' +
+        '<div class="spec__cards">' +
+          '<div class="spec__card rv" style="--d:.16s"><span class="spec__ic">' + ic('users') + '</span>' +
+            '<div><h4>适用对象</h4><p>本产品仅面向已结算合作的商家开放，服务内容与合作进度同步推进。</p></div></div>' +
+          '<div class="spec__card rv" style="--d:.22s"><span class="spec__ic">' + ic('card') + '</span>' +
+            '<div><h4>计价说明</h4><p>所列费用为税前价格，具体服务范围以双方确认的合作为准。</p></div></div>' +
+          '<div class="spec__card rv" style="--d:.28s"><span class="spec__ic">' + ic('clock') + '</span>' +
+            '<div><h4>交付节奏</h4><p>视频 15 条/月、真人直播 1 场/月、云探达人 10 条/月（每季度 30 条）、笔记 15 篇/月，按月复盘。</p></div></div>' +
+          '<div class="spec__card rv" style="--d:.34s"><span class="spec__ic">' + ic('check') + '</span>' +
+            '<div><h4>素材拍摄</h4><p>摄影师到店拍摄 1 次，单地单次拍摄 50 段视频，总时长不低于 1 小时。</p></div></div>' +
+        '</div>' +
+        '<div class="note rv" style="--d:.42s"><b>费用说明</b><span>注：产品仅对已结算合作的商家使用，此费用为税前。</span></div>' +
+        '<p class="fine rv" style="--d:.48s">本手册依据《营销共建新媒体全案内容 · 2026.10》整理，具体服务细项以双方确认的合作为准。</p>' +
+      '</div></section>';
+  }
+
+  function endHTML(){
+    return '<section class="page page--end">' +
+      '<div class="end">' +
+        '<span class="end__mark rv">START · 2026</span>' +
+        '<h2 class="rv" style="--d:.08s">让新媒体<br/><em>真正长在生意上</em></h2>' +
+        '<p class="rv" style="--d:.16s">从今天的第一条视频，到这个月的第一次复购 —— 我们陪你把这套方案跑成结果。</p>' +
+        '<div class="end__cta">' +
+          '<button class="btn btn--primary rv" style="--d:.24s" data-share="1">' + ic('share') + '<span>分享这份手册</span></button>' +
+          '<button class="btn btn--ghost rv" style="--d:.3s" data-home="1">' + ic('home') + '<span>回到封面</span></button>' +
+        '</div>' +
+        '<ul class="end__promise rv" style="--d:.34s">' +
+          ['深度参与','每月复盘','数据可查'].map(function(t){
+            return '<li>' + ic('check') + t + '</li>';
+          }).join('') +
+        '</ul>' +
+        '<div class="end__plats rv" style="--d:.36s">' +
+          CH.map(function(c){ return '<span class="end__plat">' + ic(c.icon) + c.name + '</span>'; }).join('') +
+        '</div>' +
+        '<div class="end__foot rv" style="--d:.4s"><span>营销共建 · 新媒体全案</span><b>2026.10</b></div>' +
+      '</div></section>';
+  }
+
+  /* ---------- mount ---------- */
+  var track = document.getElementById('track');
+  var bookEl = document.getElementById('book');
+  var fill = document.getElementById('progressFill');
+  var curEl = document.getElementById('curPage');
+  var totEl = document.getElementById('totPage');
+  var tocOv = document.getElementById('tocOv');
+  var tocBody = document.getElementById('tocBody');
+  var toast = document.getElementById('toast');
+
+  var html = '';
+  PAGES.forEach(function(p, i){
+    if(p.type === 'cover') html += coverHTML();
+    else if(p.type === 'intro') html += introHTML();
+    else if(p.type === 'toc') html += tocHTML();
+    else if(p.type === 'chapter') html += chapterHTML(p.ch, i);
+    else if(p.type === 'content') html += contentHTML(p);
+    else if(p.type === 'spec') html += specHTML();
+    else if(p.type === 'end') html += endHTML();
+  });
+  track.innerHTML = html;
+  totEl.textContent = pad(TOTAL);
+
+  var pages = Array.prototype.slice.call(track.children);
+  var idx = 0, busy = false;
+
+  function currentScroll(){
+    var p = pages[idx];
+    return p ? p.querySelector('.scroll') : null;
+  }
+
+  function syncScrollHint(){
+    var p = pages[idx]; if(!p) return;
+    var sc = p.querySelector('.scroll'); if(!sc){ p.classList.remove('has-more'); return; }
+    var more = sc.scrollHeight - sc.clientHeight > 24;
+    p.classList.toggle('has-more', more);
+  }
+
+  function updateHUD(){
+    curEl.textContent = pad(idx + 1);
+    fill.style.width = (TOTAL > 1 ? (idx / (TOTAL - 1)) * 100 : 100) + '%';
+    document.getElementById('btnPrev').disabled = idx === 0;
+    document.getElementById('btnNext').disabled = idx === TOTAL - 1;
+  }
+
+  function markActive(){
+    pages.forEach(function(p, i){ p.classList.toggle('is-active', i === idx); });
+  }
+
+  function go(n, opts){
+    opts = opts || {};
+    n = Math.max(0, Math.min(TOTAL - 1, n));
+    if(n === idx && !opts.force) { return; }
+    var instant = !!opts.instant;
+    if(instant){ track.style.transition = 'none'; }
+    idx = n;
+    track.style.transform = 'translate3d(-' + (idx * 100) + '%,0,0)';
+    if(instant){
+      // force reflow then restore
+      void track.offsetWidth;
+      track.style.transition = '';
+    }
+    markActive();
+    updateHUD();
+    var sc = currentScroll();
+    if(sc && !instant) sc.scrollTop = 0;
+    if(sc && instant) sc.scrollTop = 0;
+    syncScrollHint();
+    try{ history.replaceState(null, '', '?p=' + (idx + 1)); }catch(e){}
+    if(!instant && navigator.vibrate) { try{ navigator.vibrate(6); }catch(e){} }
+  }
+
+  function next(){ if(idx < TOTAL - 1) go(idx + 1); }
+  function prev(){ if(idx > 0) go(idx - 1); }
+
+  /* ---------- toc overlay ---------- */
+  function buildOverlay(){
+    var rows = '';
+    PAGES.forEach(function(p, i){
+      if(p.type === 'chapter'){
+        rows += '<button class="orr" data-jump="' + i + '"><span class="orr__no">' + p.ch.no + '</span>' +
+          '<span class="orr__t"><b>' + p.ch.name + '</b><i>' + p.ch.tag + '</i></span>' +
+          '<span class="orr__pg">' + pad(i+1) + '</span></button>';
+      } else if(p.type === 'content'){
+        rows += '<button class="orr orr--sub" data-jump="' + i + '">' +
+          '<span class="orr__t"><b>' + p.title + '</b></span><span class="orr__pg">' + pad(i+1) + '</span></button>';
+      }
+    });
+    rows += '<button class="orr" data-jump="' + (TOTAL-2) + '"><span class="orr__no">—</span>' +
+      '<span class="orr__t"><b>服务说明</b><i>适用对象 · 计价 · 交付节奏</i></span><span class="orr__pg">' + pad(TOTAL-1) + '</span></button>';
+    rows += '<button class="orr" data-jump="' + (TOTAL-1) + '"><span class="orr__no">—</span>' +
+      '<span class="orr__t"><b>开始共建</b><i>联系我们 / 分享手册</i></span><span class="orr__pg">' + pad(TOTAL) + '</span></button>';
+    tocBody.innerHTML = rows;
+  }
+  function openToc(){    Array.prototype.forEach.call(tocBody.children, function(b){
+      b.classList.toggle('is-cur', Number(b.dataset.jump) === idx);
+    });
+    tocOv.classList.add('is-open');
+    tocOv.setAttribute('aria-hidden','false');
+  }
+  function closeToc(){
+    tocOv.classList.remove('is-open');
+    tocOv.setAttribute('aria-hidden','true');
+  }
+  buildOverlay();
+
+  document.getElementById('btnToc').addEventListener('click', openToc);
+  document.getElementById('btnTocClose').addEventListener('click', closeToc);
+  document.getElementById('btnNext').addEventListener('click', next);
+  document.getElementById('btnPrev').addEventListener('click', prev);
+
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('[data-jump]');
+    if(t){ e.preventDefault(); go(Number(t.dataset.jump)); closeToc(); return; }
+    var chJump = e.target.closest('[data-jump-ch]');
+    if(chJump){
+      var no = chJump.dataset.jumpCh;
+      for(var i=0;i<PAGES.length;i++){
+        if(PAGES[i].type === 'chapter' && PAGES[i].ch.no === no){ go(i); break; }
+      }
+      return;
+    }
+    if(e.target.closest('[data-home]')){ go(0); return; }
+    if(e.target.closest('[data-share]')){ doShare(); return; }
+  });
+
+  /* ---------- share ---------- */
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('is-on');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function(){ toast.classList.remove('is-on'); }, 1900);
+  }
+  function doShare(){
+    var url = location.href;
+    var data = { title:'营销共建 · 新媒体全案服务手册', text:'58 项服务 · 4 大平台一体化新媒体经营方案', url:url };
+    if(navigator.share){
+      navigator.share(data).catch(function(){});
+    } else if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){ showToast('链接已复制，发给同事即可'); })
+        .catch(function(){ showToast('请长按地址栏复制链接'); });
+    } else {
+      showToast('请长按地址栏复制链接');
+    }
+  }
+
+  /* ---------- gestures ---------- */
+  var sx = 0, sy = 0, st = 0, tracking = false;
+  bookEl.addEventListener('touchstart', function(e){
+    if(tocOv.classList.contains('is-open')) return;
+    var t = e.touches[0];
+    sx = t.clientX; sy = t.clientY; st = Date.now(); tracking = true;
+  }, { passive:true });
+
+  bookEl.addEventListener('touchend', function(e){
+    if(!tracking) return; tracking = false;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - sx, dy = t.clientY - sy;
+    var dt = Date.now() - st;
+    if(Math.abs(dx) > 46 && Math.abs(dx) > Math.abs(dy) * 1.15 && dt < 900){
+      if(dx < 0) next(); else prev();
+    }
+  }, { passive:true });
+
+  var wheelLock = false;
+  bookEl.addEventListener('wheel', function(e){
+    if(tocOv.classList.contains('is-open')) return;
+    var sc = currentScroll();
+    if(sc){
+      var atTop = sc.scrollTop <= 1;
+      var atBot = sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 2;
+      if((e.deltaY > 0 && !atBot) || (e.deltaY < 0 && !atTop)) return;
+    }
+    if(wheelLock || Math.abs(e.deltaY) < 6) return;
+    wheelLock = true;
+    setTimeout(function(){ wheelLock = false; }, 680);
+    if(e.deltaY > 0) next(); else prev();
+  }, { passive:true });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' '){ e.preventDefault(); next(); }
+    else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); prev(); }
+    else if(e.key === 'Home'){ e.preventDefault(); go(0); }
+    else if(e.key === 'End'){ e.preventDefault(); go(TOTAL-1); }
+    else if(e.key === 'Escape'){ closeToc(); }
+  });
+
+  /* ---------- scroll hint ---------- */
+  track.addEventListener('scroll', function(e){
+    var sc = e.target;
+    if(sc.classList && sc.classList.contains('scroll')){
+      var p = sc.parentElement;
+      var more = sc.scrollTop + sc.clientHeight < sc.scrollHeight - 30;
+      p.classList.toggle('has-more', more);
+    }
+  }, true);
+
+  window.addEventListener('resize', function(){ syncScrollHint(); });
+
+  /* ---------- boot ---------- */
+  var params = new URLSearchParams(location.search);
+  var startP = parseInt(params.get('p') || '1', 10);
+  if(isNaN(startP) || startP < 1) startP = 1;
+  if(startP > TOTAL) startP = TOTAL;
+
+  if(params.get('toc') === '1'){ setTimeout(openToc, 200); }
+
+  if(params.get('static') === '1'){
+    document.documentElement.classList.add('is-static');
+    go(startP - 1, { instant:true, force:true });
+  } else {
+    go(0, { instant:true, force:true });
+    // slight entrance: reveal first page after a tick
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      if(startP > 1) go(startP - 1, { instant:true });
+      pages[idx].classList.add('is-active');
+    }); });
+  }
+  markActive();
+  updateHUD();
+  syncScrollHint();
+})();
+</script>
+</body>
+</html>
